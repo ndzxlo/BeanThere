@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Bean There</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_community">Community</string>
+    <string name="title_favourites">Favourites</string>
+    <string name="title_profile">Profile</string>
+    <string name="title_discovered">Discovered</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

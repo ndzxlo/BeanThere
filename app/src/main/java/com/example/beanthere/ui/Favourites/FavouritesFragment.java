@@ -1,4 +1,4 @@
-package com.example.beanthere.ui.home;
+package com.example.beanthere.ui.Favourites;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,22 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.beanthere.databinding.FragmentHomeBinding;
+import com.example.beanthere.databinding.FragmentFavouritesBinding;
 
-public class HomeFragment extends Fragment {
+public class FavouritesFragment extends Fragment {
 
-    private FragmentHomeBinding binding;
+    private FragmentFavouritesBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        HomeViewModel homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
+        FavouritesViewModel favouritesViewModel =
+                new ViewModelProvider(this).get(FavouritesViewModel.class);
 
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding = FragmentFavouritesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final TextView textView = binding.textDashboard;
+        favouritesViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

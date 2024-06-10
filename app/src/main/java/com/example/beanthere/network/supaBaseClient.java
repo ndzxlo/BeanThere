@@ -1,9 +1,12 @@
 package com.example.beanthere.network;
 
+import static android.provider.Settings.System.getString;
+
 import okhttp3.*;
+
+import com.example.beanthere.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-
 import java.io.IOException;
 
 public class supaBaseClient{

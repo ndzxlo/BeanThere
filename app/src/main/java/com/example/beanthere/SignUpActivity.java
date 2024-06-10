@@ -39,6 +39,12 @@ public class SignUpActivity extends AppCompatActivity {
         String name = binding.signUpName.getText().toString();
         String email = binding.signUpEmailAddress.getText().toString();
         String password = binding.signUpPassword.getText().toString();
+        String confirmPassword = binding.signUpConfirmPassword.getText().toString();
+
+        if(!password.equals(confirmPassword)){
+            Toast.makeText(SignUpActivity.this, "Passwords do not match", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         supaBaseClient.registerUser(name, email, password, new Callback() {
             @Override
@@ -54,7 +60,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()) {
                     runOnUiThread( () -> {
-                        Log.i ("REGISTER", "Registration suucessful");
+                        Log.i ("REGISTER", "Registration successful");
                         Toast.makeText(SignUpActivity.this, "Registration successful",
                                 Toast.LENGTH_LONG).show();
                     });
