@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.beanthere.databinding.ActivityLoginBinding;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -34,6 +36,10 @@ public class LoginActivity extends AppCompatActivity {
             loginUSer();
         });
 
+        binding.redirectToLoginButton.setOnClickListener(v-> {
+            startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+        });
+
     }
 
     private void loginUSer(){
@@ -51,9 +57,19 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if(response.isSuccessful()){
-                    runOnUiThread(()->Log.i("LOGIN", "Login successful"));
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    finish();
+                    String responseBody = response.body().string();
+                    Log.d("Login response", "response: " + responseBody);
+                    try{
+                        JSONObject jsonObject = new JSONObject(responseBody);
+                        String authToken = jsonObject.getString("access_token");
+                        supaBaseClient.storeAuthToken(LoginActivity.this, authToken);
+                        runOnUiThread(()->Log.i("LOGIN", "Login successful"));
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        finish();
+                    }catch (Exception e){
+                        runOnUiThread( () -> Log.e("LOGIN",
+                                "Failed to parse response: " + e.getMessage()));
+                    }
                 }else{
                     runOnUiThread(()-> Log.e("LOGIN", "Login failed: " + response.message()));
                 }

@@ -5,12 +5,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.util.*;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.beanthere.databinding.FragmentFavouritesBinding;
+import com.example.beanthere.network.supaBaseClient;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class FavouritesFragment extends Fragment {
 
@@ -24,8 +35,8 @@ public class FavouritesFragment extends Fragment {
         binding = FragmentFavouritesBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textDashboard;
-        favouritesViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final TextView textView = binding.textFavourites;;
+
         return root;
     }
 
@@ -34,4 +45,5 @@ public class FavouritesFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
 }

@@ -7,6 +7,12 @@ import okhttp3.*;
 import com.example.beanthere.R;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKey;
+
 import java.io.IOException;
 
 public class supaBaseClient{
@@ -27,7 +33,8 @@ public class supaBaseClient{
         userMetadata.addProperty("full_name", name);
         json.add("data", userMetadata);
 
-        RequestBody body = RequestBody.create(new Gson().toJson(json), MediaType.parse("application/json"));
+        RequestBody body = RequestBody.create(new Gson().toJson(json),
+                MediaType.parse("application/json"));
 
         Request request = new Request.Builder()
                 .url(url)
@@ -44,9 +51,12 @@ public class supaBaseClient{
         String url = SUPABASE_URL + "/auth/v1/token?grant_type=password";
 
         // JSON payload
-        String json = new Gson().toJson(new User(email, password));
+        JsonObject json = new JsonObject();
+        json.addProperty("email", email);
+        json.addProperty("password", password);
 
-        RequestBody body = RequestBody.create(json, MediaType.parse("application/json"));
+        RequestBody body = RequestBody.create(new Gson().toJson(json),
+                MediaType.parse("application/json"));
 
         Request request = new Request.Builder()
                 .url(url)
@@ -57,6 +67,111 @@ public class supaBaseClient{
 
         client.newCall(request).enqueue(callback);
     }
+
+    public static void logoutUser(Context context, Callback callback) {
+        String authToken = getAuthToken(context);
+        if (authToken == null) {
+            Log.e("LOGOUT", "No auth token found");
+            return;
+        }
+
+        String url = SUPABASE_URL + "/auth/v1/logout";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(RequestBody.create("", MediaType.parse("application/json")))
+                .addHeader("apikey", SUPABASE_KEY)
+                .addHeader("Authorization", "Bearer " + authToken)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+
+        // Clear the locally stored token
+        clearAuthToken(context);
+    }
+
+    public static void getUser(String authToken,Callback callback){
+
+        //url to get current authenticated user's profile from supaBase
+        String url = SUPABASE_URL + "/auth/v1/user";
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("apikey", SUPABASE_KEY)
+                .addHeader("Authorization", "Bearer " + authToken)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+
+    }
+
+    public static void storeAuthToken(Context context, String authToken) {
+        try {
+            MasterKey masterKey = new MasterKey.Builder(context)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build();
+
+            SharedPreferences sharedPreferences = EncryptedSharedPreferences.create(
+                    context,                               // context
+                    "secure_prefs",                        // file name
+                    masterKey,                             // master key
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,   // key encryption scheme
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM  // value encryption scheme
+            );
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("AUTH_TOKEN", authToken);
+            editor.apply();
+        } catch (Exception e) {
+            Log.e("STORE_TOKEN", "Failed to store auth token: " + e.getMessage());
+        }
+    }
+
+    public static String getAuthToken(Context context) {
+        try {
+            MasterKey masterKey = new MasterKey.Builder(context)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build();
+
+            SharedPreferences sharedPreferences = EncryptedSharedPreferences.create(
+                    context,                               // context
+                    "secure_prefs",                        // file name
+                    masterKey,                             // master key
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,   // key encryption scheme
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM  // value encryption scheme
+            );
+
+            return sharedPreferences.getString("AUTH_TOKEN", null);
+        } catch (Exception e) {
+            Log.e("GET_TOKEN", "Failed to retrieve auth token: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public static void clearAuthToken(Context context) {
+        try {
+            MasterKey masterKey = new MasterKey.Builder(context)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build();
+
+            SharedPreferences sharedPreferences = EncryptedSharedPreferences.create(
+                    context,                               // context
+                    "secure_prefs",                        // file name
+                    masterKey,                             // master key
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,   // key encryption scheme
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM  // value encryption scheme
+            );
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove("AUTH_TOKEN");
+            editor.apply();
+        } catch (Exception e) {
+            Log.e("CLEAR_TOKEN", "Failed to clear auth token: " + e.getMessage());
+        }
+    }
+
+
 
     // Data model for user
     static class User {

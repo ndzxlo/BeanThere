@@ -24,7 +24,7 @@ public class CommunityFragment extends Fragment {
         binding = FragmentCommunityBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textHome;
+        final TextView textView = binding.textCommunity;
         communityViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }

@@ -6,4 +6,14 @@
     <string name="title_discovered">Discovered</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- string values for buttons and textviews in profile screen -->
+    <string name="profile_account">Account</string>
+    <string name="profile_settings">Settings &amp; Preferences</string>
+    <string name="profile_support">Support</string>
+    <string name="profile_accountDetails">Account Details</string>
+    <string name="profile_notifications">Notifications</string>
+    <string name="profile_security">Security</string>
+    <string name="profile_reportBug">Report a bug</string>
+    <string name="profile_logOut">Log out</string>
 </resources>
