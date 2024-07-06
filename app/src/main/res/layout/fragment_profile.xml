@@ -47,22 +47,36 @@
                 android:textColor="#646464"
                 android:textStyle="bold"/>
 
-            <Button
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/baseline_notifications_none_24"
-                android:drawablePadding="2dp"
-                android:drawableTint="@color/white"
-                android:text="@string/profile_notifications"
-                android:drawableRight="@drawable/baseline_keyboard_arrow_right_24"
-                />
+                android:layout_height="wrap_content">
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/profile_security"
-                android:drawableRight="@drawable/baseline_keyboard_arrow_right_24"
-                android:drawableTint="@color/white"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/baseline_notifications_none_24"
+                        android:drawablePadding="2dp"
+                        android:drawableTint="@color/white"
+                        android:text="@string/profile_notifications"
+                        android:drawableRight="@drawable/baseline_keyboard_arrow_right_24"
+                        />
+
+                    <Button
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/profile_security"
+                        android:drawableRight="@drawable/baseline_keyboard_arrow_right_24"
+                        android:drawableTint="@color/white"/>
+
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:layout_width="wrap_content"
