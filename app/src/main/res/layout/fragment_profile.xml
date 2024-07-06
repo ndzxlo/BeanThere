@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#f8f8f8"
     tools:context=".ui.Profile.ProfileFragment">
 
     <ScrollView
@@ -12,54 +13,80 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/UserName"
-                android:layout_width="409dp"
-                android:layout_height="30dp"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/profile_account" />
+                android:text="@string/profile_account"
+                android:textColor="#646464"
+                android:textStyle="bold"/>
 
             <Button
                 android:id="@+id/accountDetailsButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/profile_accountDetails"/>
+                android:text="@string/profile_accountDetails"
+                android:textColor="@color/white"
+                android:drawableRight="@drawable/baseline_keyboard_arrow_right_24"
+                android:drawableTint="@color/white"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/profile_settings"/>
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/profile_notifications"/>
+                android:text="@string/profile_settings"
+                android:textColor="#646464"
+                android:textStyle="bold"/>
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/profile_security"/>
+                android:drawableLeft="@drawable/baseline_notifications_none_24"
+                android:drawablePadding="2dp"
+                android:drawableTint="@color/white"
+                android:text="@string/profile_notifications"
+                android:drawableRight="@drawable/baseline_keyboard_arrow_right_24"
+                />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_security"
+                android:drawableRight="@drawable/baseline_keyboard_arrow_right_24"
+                android:drawableTint="@color/white"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/profile_support"/>
+                android:text="@string/profile_support"
+                android:textColor="#646464"
+                android:textStyle="bold"/>
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/profile_reportBug"/>
+                android:text="@string/profile_reportBug"
+                android:drawableLeft="@drawable/baseline_report_gmailerrorred_24"
+                android:drawableTint="@color/white"
+                android:drawableRight="@drawable/baseline_keyboard_arrow_right_24"
+                />
 
             <Button
                 android:id="@+id/logOutButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/profile_logOut" />
+                android:text="@string/profile_logOut"
+                android:drawableLeft="@drawable/baseline_logout_24"
+                android:drawableTint="@color/white" />
 
 
         </LinearLayout>

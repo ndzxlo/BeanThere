@@ -30,7 +30,6 @@ public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
 
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         ProfileViewModel profileViewModel =
@@ -39,9 +38,9 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        getUSerData();
+        getUserData();
 
-        binding.logOutButton.setOnClickListener(v-> logoutUser());
+        binding.logOutButton.setOnClickListener(v -> logoutUser());
 
         return root;
     }
@@ -52,36 +51,39 @@ public class ProfileFragment extends Fragment {
         binding = null;
     }
 
-    private void getUSerData(){
+    private void getUserData() {
 
         String authToken = supaBaseClient.getAuthToken(requireContext());
 
         supaBaseClient.getUser(authToken, new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                requireActivity().runOnUiThread(()->{
+                requireActivity().runOnUiThread(() -> {
                     Log.e("UserData", "Get user data failed: " + e.getMessage());
                 });
             }
 
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     String responseBody = response.body().string();
-                    try{
+                    try {
                         JSONObject jsonObject = new JSONObject(responseBody);
                         JSONObject metaData = jsonObject.getJSONObject("user_metadata");
                         String fullName = metaData.getString("full_name");
-                        requireActivity().runOnUiThread(()->Log.i("UserData",
-                                "get user data successful"));
-                        binding.UserName.setText(fullName);
-                    }catch(JSONException e){
-                        requireActivity().runOnUiThread(()->Log.e("UserData",
-                                "Failed to parse response: " + e.getMessage()));
+                        requireActivity().runOnUiThread(() -> {
+                            Log.i("UserData", "Get user data successful");
+                            binding.UserName.setText(fullName);
+                        });
+                    } catch (JSONException e) {
+                        requireActivity().runOnUiThread(() -> {
+                            Log.e("UserData", "Failed to parse response: " + e.getMessage());
+                        });
                     }
-                }else {
-                    requireActivity().runOnUiThread(()-> Log.e("UserData",
-                            "Failed to parse response: " + response.message()));
+                } else {
+                    requireActivity().runOnUiThread(() -> {
+                        Log.e("UserData", "Failed to parse response: " + response.message());
+                    });
                 }
             }
         });
@@ -93,8 +95,7 @@ public class ProfileFragment extends Fragment {
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 requireActivity().runOnUiThread(() -> {
                     Log.e("LOGOUT", "Logout failed: " + e.getMessage());
-                    Toast.makeText(requireContext(), "Logout failed: " +
-                            e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(requireContext(), "Logout failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
             }
 
@@ -103,16 +104,14 @@ public class ProfileFragment extends Fragment {
                 if (response.isSuccessful()) {
                     requireActivity().runOnUiThread(() -> {
                         Log.i("LOGOUT", "Logout successful");
-                        Toast.makeText(requireContext(), "Logout successful",
-                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(requireContext(), "Logout successful", Toast.LENGTH_LONG).show();
                         startActivity(new Intent(requireContext(), LoginActivity.class));
                         requireActivity().finish();
                     });
                 } else {
                     requireActivity().runOnUiThread(() -> {
                         Log.e("LOGOUT", "Logout failed: " + response.message());
-                        Toast.makeText(requireContext(), "Logout failed: " + response.message()
-                                , Toast.LENGTH_LONG).show();
+                        Toast.makeText(requireContext(), "Logout failed: " + response.message(), Toast.LENGTH_LONG).show();
                     });
                 }
             }

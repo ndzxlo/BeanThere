@@ -23,8 +23,13 @@
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
-        android:id="@+id/navigation_discovered"
+        android:id="@+id/navigation_beanthere"
         android:name="com.example.beanthere.discovered"
-        android:label="fragment_community"
+        android:label="@string/title_beanThere"
         tools:layout="@layout/fragment_discovered" />
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.example.beanthere.MapsFragment"
+        android:label="fragment_maps"
+        tools:layout="@layout/fragment_maps" />
 </navigation>
