@@ -58,10 +58,6 @@ public class MainActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                         LOCATION_PERMISSION_REQUEST_CODE);
             }
-        } else {
-            // Permissions are already granted, you can proceed with your location-related tasks
-            Toast.makeText(this, "Location permissions already granted", Toast.LENGTH_SHORT).show();
-            // Proceed with accessing location
         }
     }
 

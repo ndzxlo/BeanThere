@@ -15,22 +15,35 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.android.volley.BuildConfig;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.Task;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.CircularBounds;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.IsOpenRequest;
+import com.google.android.libraries.places.api.net.IsOpenResponse;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.api.net.SearchNearbyRequest;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+
+import java.util.Arrays;
+import java.util.List;
+import java.lang.Object;
 
 public class MapsFragment extends Fragment {
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
+    private PlacesClient placesClient;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
@@ -46,10 +59,10 @@ public class MapsFragment extends Fragment {
                 // Permissions are not granted
                 Toast.makeText(requireContext(), "Location permissions are not granted", Toast.LENGTH_SHORT).show();
             }
-            googleMap.setMapStyle(new MapStyleOptions(getResources().getString(R.string.style_json)));
+            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style));
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             googleMap.setIndoorEnabled(false);
-            googleMap.setMinZoomPreference(15);
+            googleMap.setMinZoomPreference(16);
             googleMap.setMyLocationEnabled(true);
         }
     };
@@ -67,6 +80,11 @@ public class MapsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Define a variable to hold the Places API key.
+        String apiKey = BuildConfig.PLACES_API_KEY;
+        //initialize the sdk
+        Places.initializeWithNewPlacesApiEnabled(requireContext(),apiKey);
+        //placesClient instance
+        placesClient = Places.createClient(requireContext());
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
@@ -74,6 +92,7 @@ public class MapsFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+
     }
 
     private void getDeviceLocation() {
@@ -86,6 +105,7 @@ public class MapsFragment extends Fragment {
                                 Location location = task.getResult();
                                 LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
+                                showCoffeeShops(currentLatLng, placesClient);
                             } else {
                                 Log.d("Map", "Current location is null. Using defaults.");
                                 Log.e("Map", "Exception: %s", task.getException());
@@ -95,5 +115,41 @@ public class MapsFragment extends Fragment {
         } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage(), e);
         }
+    }
+
+    private void showCoffeeShops(LatLng current, PlacesClient placesClient) {
+        //list of fields to include in the response for each place
+        final List<Place.Field> placeFields = Arrays.asList(
+                Place.Field.ID,
+                Place.Field.NAME,
+                Place.Field.LAT_LNG,
+                Place.Field.RATING);
+
+        //set coffee shop search to a 3km radius
+        CircularBounds circle = CircularBounds.newInstance(current, 3000);
+
+        //get placeType of coffee shop
+        final List<String> includeTypes = Arrays.asList("coffee_shop", "cafe");
+
+        //using builder to create a searchNearbyRequest object
+        final SearchNearbyRequest searchNearbyRequest =
+                SearchNearbyRequest.builder(/* location restriction = */ circle, placeFields)
+                        .setIncludedTypes(includeTypes)
+                        .setMaxResultCount(10)
+                        .build();
+
+        //call placesClient to perform search
+        placesClient.searchNearby(searchNearbyRequest)
+                .addOnSuccessListener( response ->{
+                    List<Place> places = response.getPlaces();
+                    places.forEach(place ->
+
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(place.getLatLng())
+                                    .title(place.getName())
+                                    .snippet("Rating: " + (place.getRating()))
+                            )
+                    );
+                });
     }
 }
