@@ -1,8 +1,12 @@
 package com.example.beanthere;
 
 
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.Manifest;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.DrawableContainer;
+import android.view.MenuItem;
 import android.widget.Toast;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -11,6 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;

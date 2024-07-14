@@ -14,6 +14,8 @@
     <string name="profile_accountDetails">Account Details</string>
     <string name="profile_notifications">Notifications</string>
     <string name="profile_security">Security</string>
+    <string name="profile_invite">Invite a friend</string>
+    <string name="profile_helpCenter">Help center</string>
     <string name="profile_reportBug">Report a bug</string>
     <string name="profile_logOut">Log out</string>
 </resources>

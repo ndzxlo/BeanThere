@@ -40,7 +40,7 @@ public class ProfileFragment extends Fragment {
 
         getUserData();
 
-        binding.logOutButton.setOnClickListener(v -> logoutUser());
+        //binding.logOutButton.setOnClickListener(v -> logoutUser());
 
         return root;
     }
@@ -71,9 +71,11 @@ public class ProfileFragment extends Fragment {
                         JSONObject jsonObject = new JSONObject(responseBody);
                         JSONObject metaData = jsonObject.getJSONObject("user_metadata");
                         String fullName = metaData.getString("full_name");
+                        String email = jsonObject.getString("email");
                         requireActivity().runOnUiThread(() -> {
                             Log.i("UserData", "Get user data successful");
                             binding.UserName.setText(fullName);
+                            binding.UserEmail.setText(email);
                         });
                     } catch (JSONException e) {
                         requireActivity().runOnUiThread(() -> {
