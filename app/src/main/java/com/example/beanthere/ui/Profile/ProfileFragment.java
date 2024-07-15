@@ -40,7 +40,7 @@ public class ProfileFragment extends Fragment {
 
         getUserData();
 
-        //binding.logOutButton.setOnClickListener(v -> logoutUser());
+        binding.logOutButton.setOnClickListener(v -> logoutUser());
 
         return root;
     }

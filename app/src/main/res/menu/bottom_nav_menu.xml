@@ -13,7 +13,7 @@
 
     <item
         android:id="@+id/mapsFragment"
-        android:icon="@drawable/coffee_selector"
+        android:icon="@drawable/coffee_bean_svgrepo_com"
         android:title=""/>
 
     <item
