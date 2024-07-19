@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.util.*;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import okhttp3.Response;
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
+    private EditText passwordEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +38,13 @@ public class LoginActivity extends AppCompatActivity {
             loginUSer();
         });
 
-        binding.redirectToLoginButton.setOnClickListener(v-> {
+        binding.signupText.setOnClickListener(v-> {
             startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
         });
 
+
     }
+
 
     private void loginUSer(){
 

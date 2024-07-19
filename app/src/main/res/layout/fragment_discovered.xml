@@ -1,16 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".discovered"
-    android:background="#f8f8f8">
+    android:background="#f8f8f8"
+    android:paddingHorizontal="25dp">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/discovered_shopAddress"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"/>
+
+
+    <EditText
+        android:id="@+id/shopLocation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"
+        android:layout_height="50dp"
+        android:inputType="text"
+        android:hint="@string/discovered_shopAddress"
+        android:autofillHints="postalAddress"
+        android:textColorHint="@color/quantum_grey"
+        android:textColor="@color/black"
+        android:background="@drawable/edit_text_border"
+        android:padding="5dp"
+        android:layout_marginBottom="20dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/discovered_shopName"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_marginBottom="5dp"/>
+
+    <EditText
+        android:id="@+id/shopNameInput"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:inputType="text"
+        android:hint="@string/discovered_shopName"
+        android:textColorHint="@color/quantum_grey"
+        android:autofillHints="name"
+        android:textColor="@color/black"
+        android:layout_marginBottom="20dp"
+        android:padding="5dp"
+        android:background="@drawable/edit_text_border"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="store hours"
         android:textColor="@color/black"/>
 
-</FrameLayout>
+    <Button
+        android:id="@+id/uploadImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/baseline_add_circle_outline_24"
+        android:drawableTint="@color/white"
+        android:text="add images"
+        android:textColor="@color/white"
+        android:layout_marginBottom="20dp"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="15dp"/>
+
+    <ImageView
+        android:id="@+id/uploadedImages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/discovered_rateText"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginBottom="5dp"/>
+
+    <RatingBar
+        android:id="@+id/shopRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:rating="3"
+        android:stepSize="0.5"
+        android:progressBackgroundTint="#8C7B76"
+        android:progressTint="@color/quantum_brown"/>
+
+
+</LinearLayout>

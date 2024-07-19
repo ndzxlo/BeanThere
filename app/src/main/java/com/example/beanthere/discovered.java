@@ -1,64 +1,43 @@
 package com.example.beanthere;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.*;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link discovered#newInstance} factory method to
- * create an instance of this fragment.
- */
+import com.example.beanthere.databinding.FragmentDiscoveredBinding;
+import com.example.beanthere.ui.Profile.ProfileViewModel;
+
 public class discovered extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private FragmentDiscoveredBinding binding;
+    private static final int REQUEST_IMAGE_SELECT = 101;
+    private static final int REQUEST_IMAGE_CAPTURE = 102;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private ImageView uploadedImages;
 
-    public discovered() {
-        // Required empty public constructor
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_discovered, container, false);
+
+        Button addImages = view.findViewById(R.id.uploadImage);
+        addImages.setOnClickListener(v->{
+                    Intent intent = new Intent(Intent.ACTION_PICK,
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
+                });
+
+        return view;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Community.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static discovered newInstance(String param1, String param2) {
-        discovered fragment = new discovered();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_discovered, container, false);
-    }
 }

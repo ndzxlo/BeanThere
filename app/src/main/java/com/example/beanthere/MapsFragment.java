@@ -2,6 +2,7 @@ package com.example.beanthere;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,16 +16,21 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.BuildConfig;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMapOptions;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.AdvancedMarkerOptions;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PinConfig;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.CircularBounds;
@@ -34,7 +40,6 @@ import com.google.android.libraries.places.api.net.IsOpenResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.api.net.SearchNearbyRequest;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-
 import java.util.Arrays;
 import java.util.List;
 import java.lang.Object;
@@ -80,13 +85,18 @@ public class MapsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Define a variable to hold the Places API key.
-        String apiKey = BuildConfig.PLACES_API_KEY;
+        //String apiKey = BuildConfig.PLACES_API_KEY;
+        String apiKey="AIzaSyClRifxz9KQelrEiNEYhNiqTyCAp4H2bYc";
         //initialize the sdk
-        Places.initializeWithNewPlacesApiEnabled(requireContext(),apiKey);
+        Places.initializeWithNewPlacesApiEnabled(requireContext(), apiKey);
         //placesClient instance
         placesClient = Places.createClient(requireContext());
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+
+        MapFragment mapFragment1 = MapFragment.newInstance(
+                new GoogleMapOptions().mapId(getResources().getString(R.string.map_ID))
+        );
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
@@ -140,16 +150,29 @@ public class MapsFragment extends Fragment {
 
         //call placesClient to perform search
         placesClient.searchNearby(searchNearbyRequest)
-                .addOnSuccessListener( response ->{
+                .addOnSuccessListener(response -> {
                     List<Place> places = response.getPlaces();
-                    places.forEach(place ->
+                    places.forEach(place -> {
+                        PinConfig.Builder pinConfigBuilder = PinConfig.builder();
+                        pinConfigBuilder.setBackgroundColor(Color.rgb(139, 69, 19)); // Coffee brown color
+                        pinConfigBuilder.setBorderColor(Color.WHITE);
 
-                            mMap.addMarker(new MarkerOptions()
-                                    .position(place.getLatLng())
-                                    .title(place.getName())
-                                    .snippet("Rating: " + (place.getRating()))
-                            )
-                    );
+                        // Set a coffee cup glyph
+                        PinConfig.Glyph glyphText = new PinConfig.Glyph("☕", Color.WHITE);
+                        pinConfigBuilder.setGlyph(glyphText);
+
+                        PinConfig pinConfig = pinConfigBuilder.build();
+
+                        // Create AdvancedMarkerOptions
+                        AdvancedMarkerOptions advancedMarkerOptions = new AdvancedMarkerOptions()
+                                .position(place.getLatLng())
+                                .icon(BitmapDescriptorFactory.fromPinConfig(pinConfig))
+                                .title(place.getName())
+                                .snippet("Rating: " + place.getRating());
+
+                        // Add the marker to the map
+                        mMap.addMarker(advancedMarkerOptions);
+                    });
                 });
     }
 }

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.util.*;
 import android.widget.*;
 import android.content.Intent;
@@ -16,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.beanthere.LoginActivity;
 import com.example.beanthere.databinding.FragmentProfileBinding;
 import com.example.beanthere.network.supaBaseClient;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +40,11 @@ public class ProfileFragment extends Fragment {
 
         getUserData();
 
+        SwitchMaterial mySwitch = binding.darkModeSwitch;
+
         binding.logOutButton.setOnClickListener(v -> logoutUser());
+        binding.darkModeSwitchButton.setOnClickListener(view ->
+                mySwitch.setChecked(mySwitch.isChecked()));
 
         return root;
     }
