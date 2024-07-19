@@ -85,8 +85,7 @@ public class MapsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Define a variable to hold the Places API key.
-        //String apiKey = BuildConfig.PLACES_API_KEY;
-        String apiKey="AIzaSyClRifxz9KQelrEiNEYhNiqTyCAp4H2bYc";
+        String apiKey = BuildConfig.PLACES_API_KEY;;
         //initialize the sdk
         Places.initializeWithNewPlacesApiEnabled(requireContext(), apiKey);
         //placesClient instance
