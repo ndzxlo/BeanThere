@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.android.volley.BuildConfig;
+import com.example.beanthere.BuildConfig;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -28,6 +28,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.AdvancedMarkerOptions;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapCapabilities;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PinConfig;
@@ -69,6 +70,7 @@ public class MapsFragment extends Fragment {
             googleMap.setIndoorEnabled(false);
             googleMap.setMinZoomPreference(16);
             googleMap.setMyLocationEnabled(true);
+
         }
     };
 
@@ -85,17 +87,14 @@ public class MapsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Define a variable to hold the Places API key.
-        String apiKey = BuildConfig.PLACES_API_KEY;;
+        String apiKey = BuildConfig.PLACES_API_KEY;
+        
         //initialize the sdk
         Places.initializeWithNewPlacesApiEnabled(requireContext(), apiKey);
         //placesClient instance
         placesClient = Places.createClient(requireContext());
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity());
-
-        MapFragment mapFragment1 = MapFragment.newInstance(
-                new GoogleMapOptions().mapId(getResources().getString(R.string.map_ID))
-        );
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
