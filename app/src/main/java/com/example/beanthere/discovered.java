@@ -31,11 +31,6 @@ public class discovered extends Fragment {
         View view = inflater.inflate(R.layout.fragment_discovered, container, false);
 
         Button addImages = view.findViewById(R.id.uploadImage);
-        addImages.setOnClickListener(v->{
-                    Intent intent = new Intent(Intent.ACTION_PICK,
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent,REQUEST_IMAGE_CAPTURE);
-                });
 
         return view;
     }

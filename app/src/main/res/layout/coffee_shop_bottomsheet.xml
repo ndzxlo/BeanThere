@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/bottomsheet_background"
+    android:padding="12dp">
+
+    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+        android:layout_width="32dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center"
+        android:background="@color/quantum_grey"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/bottomsheet_shopName"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="wrap_content"
+            android:text="display shop name"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="25sp"/>
+
+        <ImageView
+            android:id="@+id/bottomsheet_favButton"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="20sp"
+            android:src="@drawable/add_to_favourite_selector"
+            app:tint="@color/black"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="5sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="20sp"
+            android:layout_height="20sp"
+            android:src="@drawable/star_solid"
+            app:tint="@color/accentBrown"
+            android:layout_marginEnd="5sp"/>
+
+        <TextView
+            android:id="@+id/bottomsheet_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4.5"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="5sp"/>
+
+    <TextView
+        android:id="@+id/bottomsheet_shopAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="shop address"
+        android:textColor="@color/black"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="15sp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/bottomsheet_directionsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/route_svgrepo_com__1_"
+            android:drawableTint="@color/black"
+            android:drawablePadding="10dp"
+            android:text="Directions"
+            android:textColor="@color/black"
+            android:background="@color/purple_700"
+            android:padding="10sp"
+            android:layout_marginEnd="30dp"/>
+
+        <Button
+            android:id="@+id/bottomsheet_shareButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/share_nodes_svgrepo_com"
+            android:drawableTint="@color/black"
+            android:drawablePadding="10sp"
+            android:text="Share"
+            android:textColor="@color/black"
+            android:background="@color/accentBrown"
+            android:padding="10sp"/>
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30dp"/>
+
+</LinearLayout>

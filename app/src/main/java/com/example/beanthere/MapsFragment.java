@@ -1,6 +1,7 @@
 package com.example.beanthere;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -9,10 +10,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -30,6 +35,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapCapabilities;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PinConfig;
 import com.google.android.gms.tasks.Task;
@@ -42,6 +48,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.api.net.SearchNearbyRequest;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.lang.Object;
 
@@ -50,6 +57,7 @@ public class MapsFragment extends Fragment {
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private PlacesClient placesClient;
+    private HashMap<String, Place> placeHashMap;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
@@ -131,7 +139,8 @@ public class MapsFragment extends Fragment {
                 Place.Field.ID,
                 Place.Field.NAME,
                 Place.Field.LAT_LNG,
-                Place.Field.RATING);
+                Place.Field.RATING,
+                Place.Field.ADDRESS);
 
         //set coffee shop search to a 3km radius
         CircularBounds circle = CircularBounds.newInstance(current, 3000);
@@ -146,17 +155,23 @@ public class MapsFragment extends Fragment {
                         .setMaxResultCount(10)
                         .build();
 
+        //hashmap to store the placeId and place object for reference when marker clicked
+        placeHashMap = new HashMap<>();
+
         //call placesClient to perform search
         placesClient.searchNearby(searchNearbyRequest)
                 .addOnSuccessListener(response -> {
                     List<Place> places = response.getPlaces();
                     places.forEach(place -> {
+
+                        placeHashMap.put(place.getId(), place);
+
                         PinConfig.Builder pinConfigBuilder = PinConfig.builder();
-                        pinConfigBuilder.setBackgroundColor(Color.rgb(139, 69, 19)); // Coffee brown color
-                        pinConfigBuilder.setBorderColor(Color.WHITE);
+                        pinConfigBuilder.setBackgroundColor(Color.rgb(162,99,52));
+                        pinConfigBuilder.setBorderColor(Color.rgb(162,99,52));
 
                         // Set a coffee cup glyph
-                        PinConfig.Glyph glyphText = new PinConfig.Glyph("☕", Color.WHITE);
+                        PinConfig.Glyph glyphText = new PinConfig.Glyph("☕");
                         pinConfigBuilder.setGlyph(glyphText);
 
                         PinConfig pinConfig = pinConfigBuilder.build();
@@ -166,11 +181,33 @@ public class MapsFragment extends Fragment {
                                 .position(place.getLatLng())
                                 .icon(BitmapDescriptorFactory.fromPinConfig(pinConfig))
                                 .title(place.getName())
-                                .snippet("Rating: " + place.getRating());
+                                .snippet("Rating: " + (place.getRating() != null ? place.getRating() : "No Rating"));
 
                         // Add the marker to the map
-                        mMap.addMarker(advancedMarkerOptions);
+                        Marker marker = mMap.addMarker(advancedMarkerOptions);
+                        marker.setTag(place.getId());
+                        mMap.setOnMarkerClickListener(this::OnMarkerClick);  //listens for when map marker clicked
+
                     });
                 });
     }
+
+    private boolean OnMarkerClick(Marker marker) {
+
+        View view = getView();
+
+        String shopID = marker.getTag().toString();
+        Log.i("ID", "the id is: " + shopID);
+        String shopName = marker.getTitle();
+        if(placeHashMap.containsKey(shopID)){
+            Place place = placeHashMap.get(shopID);
+            String shopRating = place.getRating().toString();
+            String shopAddress = place.getAddress();
+            MyBottomSheetFragment bottomSheetFragment =
+                    MyBottomSheetFragment.newInstance(shopName, shopRating, shopAddress);
+            bottomSheetFragment.show(getChildFragmentManager(),bottomSheetFragment.getTag());
+        }
+        return true;
+    }
+
 }
