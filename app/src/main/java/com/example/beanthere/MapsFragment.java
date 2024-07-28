@@ -197,14 +197,14 @@ public class MapsFragment extends Fragment {
         View view = getView();
 
         String shopID = marker.getTag().toString();
-        Log.i("ID", "the id is: " + shopID);
         String shopName = marker.getTitle();
         if(placeHashMap.containsKey(shopID)){
             Place place = placeHashMap.get(shopID);
             String shopRating = place.getRating().toString();
             String shopAddress = place.getAddress();
+            String latlng = place.getLatLng().toString();
             MyBottomSheetFragment bottomSheetFragment =
-                    MyBottomSheetFragment.newInstance(shopName, shopRating, shopAddress);
+                    MyBottomSheetFragment.newInstance(shopID, shopName, shopAddress,shopRating, latlng);
             bottomSheetFragment.show(getChildFragmentManager(),bottomSheetFragment.getTag());
         }
         return true;
