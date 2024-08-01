@@ -95,6 +95,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+
     private void logoutUser() {
         supaBaseClient.logoutUser(requireContext(), new Callback() {
             @Override

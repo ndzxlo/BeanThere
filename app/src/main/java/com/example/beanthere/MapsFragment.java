@@ -1,9 +1,13 @@
 package com.example.beanthere;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
@@ -120,7 +124,9 @@ public class MapsFragment extends Fragment {
                             if (task.isSuccessful() && task.getResult() != null) {
                                 Location location = task.getResult();
                                 LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                                //when we get device location pan to uer location with a user marker
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
+                                // immediately generate coffee shop markers in given radius
                                 showCoffeeShops(currentLatLng, placesClient);
                             } else {
                                 Log.d("Map", "Current location is null. Using defaults.");
@@ -164,19 +170,25 @@ public class MapsFragment extends Fragment {
                     List<Place> places = response.getPlaces();
                     places.forEach(place -> {
 
+                        //store each place object in a hashamp with a place id as key -> this way we
+                        // do not need to redo nearby search(faster and cheaper)
                         placeHashMap.put(place.getId(), place);
 
+                        //generating a custom marker in brown
                         PinConfig.Builder pinConfigBuilder = PinConfig.builder();
                         pinConfigBuilder.setBackgroundColor(Color.rgb(162,99,52));
                         pinConfigBuilder.setBorderColor(Color.rgb(162,99,52));
 
                         // Set a coffee cup glyph
-                        PinConfig.Glyph glyphText = new PinConfig.Glyph("☕");
-                        pinConfigBuilder.setGlyph(glyphText);
+//                        PinConfig.Glyph glyphText = new PinConfig.Glyph("☕");
+//                        pinConfigBuilder.setGlyph(glyphText);
+                        Bitmap icon = createBitmapFromEmoji(requireContext());
+                        BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(icon);
+                        pinConfigBuilder.setGlyph(new PinConfig.Glyph(descriptor));
 
                         PinConfig pinConfig = pinConfigBuilder.build();
 
-                        // Create AdvancedMarkerOptions
+                         //Create AdvancedMarkerOptions
                         AdvancedMarkerOptions advancedMarkerOptions = new AdvancedMarkerOptions()
                                 .position(place.getLatLng())
                                 .icon(BitmapDescriptorFactory.fromPinConfig(pinConfig))
@@ -185,7 +197,7 @@ public class MapsFragment extends Fragment {
 
                         // Add the marker to the map
                         Marker marker = mMap.addMarker(advancedMarkerOptions);
-                        marker.setTag(place.getId());
+                        marker.setTag(place.getId()); //storing each placeID in a marker tag so we can use when checking hashmap placeID
                         mMap.setOnMarkerClickListener(this::OnMarkerClick);  //listens for when map marker clicked
 
                     });
@@ -193,12 +205,13 @@ public class MapsFragment extends Fragment {
     }
 
     private boolean OnMarkerClick(Marker marker) {
-
+        //when marker is clicked we are going to create a bottomsheet dialog
+        //using placeId stored in the marker tag to pull up the correct location info
         View view = getView();
 
         String shopID = marker.getTag().toString();
         String shopName = marker.getTitle();
-        if(placeHashMap.containsKey(shopID)){
+        if(placeHashMap.containsKey(shopID)){ //if the placeId in the marker tag is the hashmap then its one of the generated coffeeshop markers
             Place place = placeHashMap.get(shopID);
             String shopRating = place.getRating().toString();
             String shopAddress = place.getAddress();
@@ -208,6 +221,26 @@ public class MapsFragment extends Fragment {
             bottomSheetFragment.show(getChildFragmentManager(),bottomSheetFragment.getTag());
         }
         return true;
+    }
+
+    private Bitmap createBitmapFromEmoji(Context context) {
+        // Create a TextView with the emoji
+        TextView textView = new TextView(context);
+        textView.setText("☕"); // icon show in the marker glyph
+        textView.setTextSize(14); // Adjust the size as needed
+        textView.setTextColor(Color.BLACK);
+
+        // Measure and layout the TextView
+        textView.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        textView.layout(0, 0, textView.getMeasuredWidth(), textView.getMeasuredHeight());
+
+        // Create a Bitmap and draw the TextView onto the Bitmap
+        Bitmap bitmap = Bitmap.createBitmap(textView.getMeasuredWidth(), textView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        textView.draw(canvas);
+
+        return bitmap;
     }
 
 }

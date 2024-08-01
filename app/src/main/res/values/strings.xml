@@ -37,4 +37,15 @@
     <string name="discovered_shopName">Shop Name</string>
     <string name="discovered_rateText">Rate Shop</string>
 
+<!-- Favourites page   -->
+    <string name="favourites_defaultText">No favourites</string>
+    <string name="favourites_addToFavorites">Go to map to add locations to favourites</string>
+
+<!-- Favourites cardview-->
+    <string name="favouritesLogo">B</string>
+    <string name="favouritesShopName">Bean There Coffee Co.</string>
+    <string name="favouritesRate">4.4</string>
+    <string name="favouritesNavigate">Navigate</string>
+    <string name="favouritesAddress">44 Stanley Ave, Milpark, Johannesburg</string>
+
 </resources>

@@ -11,8 +11,12 @@ import com.google.gson.JsonObject;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -94,6 +98,20 @@ public class supaBaseClient{
         client.newCall(request).enqueue(callback);
     }
 
+    public static void getFavourites(String userId, Callback callback){
+
+        String url = SUPABASE_URL + "/rest/v1/favourites?select=*&user_id=eq." + userId;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("apikey", SUPABASE_KEY)
+                .addHeader("Authorization", "Bearer " + SUPABASE_KEY)
+                .addHeader("Content-Type", "application/json")
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
     public static void logoutUser(Context context, Callback callback) {
         String authToken = getAuthToken(context);
         if (authToken == null) {
@@ -123,7 +141,6 @@ public class supaBaseClient{
 
         Request request = new Request.Builder()
                 .url(url)
-                .get()
                 .addHeader("apikey", SUPABASE_KEY)
                 .addHeader("Authorization", "Bearer " + authToken)
                 .build();

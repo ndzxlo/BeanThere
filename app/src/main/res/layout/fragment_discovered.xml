@@ -101,5 +101,10 @@
         android:progressBackgroundTint="#8C7B76"
         android:progressTint="@color/quantum_brown"/>
 
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:button="@drawable/add_to_favourite_selector"
+        app:useMaterialThemeColors="false"/>
 
 </LinearLayout>
