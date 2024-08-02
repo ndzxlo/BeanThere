@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="15dp">
@@ -7,10 +10,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favouritesRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/favouritesDefaultText"
@@ -20,8 +25,11 @@
         android:textColor="@color/white"
         android:textStyle="normal"
         android:textSize="20sp"
-        android:layout_centerInParent="true"
-        android:visibility="visible"/>
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/AddToFavouritesText"
@@ -30,10 +38,10 @@
         android:text="@string/favourites_addToFavorites"
         android:textColor="@color/quantum_grey"
         android:textSize="12sp"
-        android:layout_below="@id/favouritesDefaultText"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
-        android:visibility="visible"/>
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/favouritesDefaultText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

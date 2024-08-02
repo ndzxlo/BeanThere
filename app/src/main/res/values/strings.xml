@@ -12,6 +12,7 @@
     <string name="login_emailAddress">email address</string>
     <string name="login_password">password</string>
     <string name="login_buttonText">Login</string>
+    <string name="logig_loggingInText">Logging in</string>
     <string name="login_forgotPassword">forgot password?</string>
     <string name="login_dontHaveAccount">Don\'t have an account?</string>
     <string name="login_Signup">Sign up</string>

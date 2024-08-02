@@ -112,6 +112,26 @@ public class supaBaseClient{
         client.newCall(request).enqueue(callback);
     }
 
+    public static void deleteFavourite(String userId, String placeId, Callback callback){
+
+        String url = SUPABASE_URL + "/rest/v1/favourites";
+
+        // Build the query parameters
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
+        urlBuilder.addQueryParameter("user_id", "eq." + userId);
+        urlBuilder.addQueryParameter("place_id", "eq." + placeId);
+
+        Request request = new Request.Builder()
+                .url(urlBuilder.build())
+                .addHeader("apikey", SUPABASE_KEY)
+                .addHeader("Authorization", "Bearer " + SUPABASE_KEY)
+                .addHeader("Content-Type", "application/json")
+                .delete()
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
     public static void logoutUser(Context context, Callback callback) {
         String authToken = getAuthToken(context);
         if (authToken == null) {

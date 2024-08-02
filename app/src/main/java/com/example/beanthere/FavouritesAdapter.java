@@ -3,6 +3,7 @@ package com.example.beanthere;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -68,13 +69,13 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Fa
         }
         return name;
     }
-
+    /*take the shopname string and only return the first letter, this will be used as an "icon"
+    * for each */
     private String firstLetter(String text) {
         if (text.length() <= 1) {
             return text;
         } else {
             return text.substring(0, 1);
-
         }
     }
 }
