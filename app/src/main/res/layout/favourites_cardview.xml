@@ -66,25 +66,13 @@
 
         </LinearLayout>
 
-<!--        <TextView-->
-<!--            android:id="@+id/favouriteRate"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="@string/favouritesRate"-->
-<!--            android:textStyle="bold"-->
-<!--            android:textSize="11sp"-->
-<!--            android:drawableStart="@drawable/star_solid"-->
-<!--            app:drawableTint="@color/accentBrown"-->
-<!--            android:drawablePadding="2dp"-->
-<!--            android:layout_below="@id/favouriteShopName"-->
-<!--            android:layout_toEndOf="@id/favouritesLogo"-->
-<!--            android:textColor="@color/black" />-->
-
         <ImageView
             android:id="@+id/favouriteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/heart_solid"
+            android:background="@drawable/cardview_background"
+            android:padding="6dp"
             app:useMaterialThemeColors="false"
             android:layout_toStartOf="@id/favouritesShareButton"
             android:layout_marginEnd="16dp"/>
@@ -95,6 +83,8 @@
             android:layout_height="wrap_content"
             android:src="@drawable/share_nodes_svgrepo_com"
             app:tint="@color/black"
+            android:background="@drawable/cardview_background"
+            android:padding="6dp"
             android:layout_alignParentEnd="true"/>
 
         <TextView
@@ -106,10 +96,10 @@
             android:drawableStart="@drawable/location_pin_svgrepo_com__1_"
             android:drawablePadding="2dp"
             android:layout_below="@id/spaceBelowLogo"
-            android:layout_alignBaseline="@id/FavouriteNavigateButton"/>
+            android:layout_alignBaseline="@id/favouriteNavigateButton"/>
 
         <Button
-            android:id="@+id/FavouriteNavigateButton"
+            android:id="@+id/favouriteNavigateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/favouritesNavigate"

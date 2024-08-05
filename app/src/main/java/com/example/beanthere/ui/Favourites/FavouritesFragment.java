@@ -1,5 +1,6 @@
 package com.example.beanthere.ui.Favourites;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.util.*;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -31,10 +33,11 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class FavouritesFragment extends Fragment {
+public class FavouritesFragment extends Fragment implements FavouritesAdapter.OnItemClickListener {
 
     private FragmentFavouritesBinding binding;
     private String userId;
+    private String userName;
     private RecyclerView recyclerView;
     private TextView noFavouritesText;
     private TextView addFavouritesText;
@@ -54,7 +57,7 @@ public class FavouritesFragment extends Fragment {
         addFavouritesText = binding.AddToFavouritesText;
 
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new FavouritesAdapter(favouriteItems);
+        adapter = new FavouritesAdapter(favouriteItems, this);
         recyclerView.setAdapter(adapter);
 
         //fetch user id so we can use it when calling get method for user database info
@@ -148,6 +151,45 @@ public class FavouritesFragment extends Fragment {
         });
     }
 
+    private void deleteFavourite(FavouritesModel favouritesModel){
+
+        supaBaseClient.deleteFavourite(userId, favouritesModel.getPlaceID(), new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                requireActivity().runOnUiThread(()->{
+                    showToast("Couldn't delete from favourites");
+                    Log.e("DELETE_FAVOURITE", "Failed to delete favourite: " + e.getMessage());
+                });
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if( response.isSuccessful() ){
+                    requireActivity().runOnUiThread( ()->{
+                        int position = favouriteItems.indexOf(favouritesModel);
+                        if (favouriteItems.size() == 1) {  // This was the last item
+                            favouriteItems.remove(position);
+                            adapter.notifyItemRemoved(position);
+                            isFavourites(favouriteItems);  // This will hide the RecyclerView and show the "no favourites" text
+                        } else {
+                            favouriteItems.remove(position);
+                            adapter.notifyItemRemoved(position);
+                        }
+                        showToast("Deleted from favourites");
+                        Log.d("DELETE_FAVOURITE", "Favourite deleted successfully");
+                    });
+
+                }else{
+                    requireActivity().runOnUiThread(()->{
+                        showToast("Couldn't delete from favourites");
+                        Log.e("DELETE_FAVOURITE", "Failed to delete favourite: " +response.message());
+                    });
+
+                }
+            }
+        });
+    }
+
     private void isFavourites(List faves){
         if (faves.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
@@ -161,4 +203,32 @@ public class FavouritesFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onShareButtonClick(FavouritesModel favouritesModel) {
+        shareLocation(favouritesModel);
+    }
+
+    @Override
+    public void onFavouriteButtonClick(FavouritesModel favouritesModel) {
+        deleteFavourite(favouritesModel);
+    }
+
+    @Override
+    public void onNavigateButtonClick(FavouritesModel favouritesModel) {
+
+    }
+
+    private void shareLocation(FavouritesModel favouritesModel){
+        Intent shareCoffeeShop = new Intent();
+        shareCoffeeShop.setAction(Intent.ACTION_SEND);
+        shareCoffeeShop.putExtra(Intent.EXTRA_TEXT, "Hey, I found this cool place on bean there called " +
+                favouritesModel.getName() + ", it is located at " + favouritesModel.getAddress());
+        shareCoffeeShop.setType("text/plain");
+        Intent shareIntent = Intent.createChooser(shareCoffeeShop, null);
+        startActivity(shareIntent);
+    }
+
+    private void showToast(String message){
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+    }
 }

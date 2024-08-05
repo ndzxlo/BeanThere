@@ -91,11 +91,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/route_svgrepo_com__1_"
-            android:drawableTint="@color/black"
+            android:drawableTint="@color/white"
             android:drawablePadding="10dp"
             android:text="Directions"
-            android:textColor="@color/black"
-            android:background="@color/purple_700"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/accentBrown"
+            app:useMaterialThemeColors="false"
             android:padding="10sp"
             android:layout_marginEnd="30dp"/>
 
@@ -104,11 +105,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/share_nodes_svgrepo_com"
-            android:drawableTint="@color/black"
+            android:drawableTint="@color/white"
             android:drawablePadding="10sp"
             android:text="Share"
-            android:textColor="@color/black"
-            android:background="@color/accentBrown"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/accentBrown"
+            app:useMaterialThemeColors="false"
             android:padding="10sp"/>
 
     </LinearLayout>
