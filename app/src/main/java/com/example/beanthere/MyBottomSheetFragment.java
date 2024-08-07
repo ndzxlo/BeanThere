@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +25,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class MyBottomSheetFragment extends BottomSheetDialogFragment {
+public class MyBottomSheetFragment extends BottomSheetDialogFragment{
     private static final String ARG_PLACE_ID = "place_id";
     private static final String ARG_SHOP_NAME = "shop_name";
     private static final String ARG_SHOP_ADDRESS = "shop_address";
@@ -34,6 +35,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
     private static String address;
     private static String rating;
     private String userId;
+    private Bottomsheetlistener bottomsheetlistener;
 
     public static MyBottomSheetFragment newInstance (String placeId, String shopName,String shopAddress, String shopRating,String latlng){
         MyBottomSheetFragment fragment = new MyBottomSheetFragment();
@@ -50,6 +52,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.coffee_shop_bottomsheet, container, false);
+
 
         retrieveUserId();
 
@@ -75,6 +78,17 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         ImageView heart = view.findViewById(R.id.bottomsheet_favButton);
         heart.setOnClickListener(v->
             addFavourite());
+
+        Button directionsButton = view.findViewById(R.id.bottomsheet_directionsButton);
+        directionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bottomsheetlistener != null) {
+                    bottomsheetlistener.onDirectionsClick();
+                }
+                dismiss();
+            }
+        });
         return view;
     }
 
@@ -145,5 +159,9 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
                 }
             }
         });
+    }
+
+    public void setListener(Bottomsheetlistener listener){
+        bottomsheetlistener = listener;
     }
 }

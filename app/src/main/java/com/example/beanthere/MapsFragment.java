@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.beanthere.BuildConfig;
+import com.example.beanthere.network.routesApi;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -42,6 +43,8 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PinConfig;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.CircularBounds;
@@ -51,17 +54,31 @@ import com.google.android.libraries.places.api.net.IsOpenResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.api.net.SearchNearbyRequest;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.lang.Object;
+import com.google.maps.android.PolyUtil;
 
-public class MapsFragment extends Fragment {
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
+public class MapsFragment extends Fragment implements Bottomsheetlistener{
 
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private PlacesClient placesClient;
     private HashMap<String, Place> placeHashMap;
+    LatLng currentPosition;
+    String shopID;
+    private Polyline currentPolyline;
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
@@ -123,11 +140,12 @@ public class MapsFragment extends Fragment {
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful() && task.getResult() != null) {
                                 Location location = task.getResult();
-                                LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                                //when we get device location pan to uer location with a user marker
-                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
+                                currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
+                                Log.d("LatLng", "your current position in coordinates is: " + currentPosition);
+                                //when we get device location pan to user location with a user marker
+                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentPosition, 15));
                                 // immediately generate coffee shop markers in given radius
-                                showCoffeeShops(currentLatLng, placesClient);
+                                showCoffeeShops(currentPosition, placesClient);
                             } else {
                                 Log.d("Map", "Current location is null. Using defaults.");
                                 Log.e("Map", "Exception: %s", task.getException());
@@ -170,7 +188,7 @@ public class MapsFragment extends Fragment {
                     List<Place> places = response.getPlaces();
                     places.forEach(place -> {
 
-                        //store each place object in a hashamp with a place id as key -> this way we
+                        //store each place object in a hashmap with a place id as key -> this way we
                         // do not need to redo nearby search(faster and cheaper)
                         placeHashMap.put(place.getId(), place);
 
@@ -180,8 +198,6 @@ public class MapsFragment extends Fragment {
                         pinConfigBuilder.setBorderColor(Color.rgb(162,99,52));
 
                         // Set a coffee cup glyph
-//                        PinConfig.Glyph glyphText = new PinConfig.Glyph("☕");
-//                        pinConfigBuilder.setGlyph(glyphText);
                         Bitmap icon = createBitmapFromEmoji(requireContext());
                         BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(icon);
                         pinConfigBuilder.setGlyph(new PinConfig.Glyph(descriptor));
@@ -205,19 +221,20 @@ public class MapsFragment extends Fragment {
     }
 
     private boolean OnMarkerClick(Marker marker) {
-        //when marker is clicked we are going to create a bottomsheet dialog
+        //when marker is clicked we are going to create a bottom sheet dialog
         //using placeId stored in the marker tag to pull up the correct location info
         View view = getView();
 
-        String shopID = marker.getTag().toString();
+        shopID = marker.getTag().toString();
         String shopName = marker.getTitle();
-        if(placeHashMap.containsKey(shopID)){ //if the placeId in the marker tag is the hashmap then its one of the generated coffeeshop markers
+        if(placeHashMap.containsKey(shopID)){ //if the placeId in the marker tag is the hashmap then its one of the generated coffee shop markers
             Place place = placeHashMap.get(shopID);
             String shopRating = place.getRating().toString();
             String shopAddress = place.getAddress();
             String latlng = place.getLatLng().toString();
             MyBottomSheetFragment bottomSheetFragment =
                     MyBottomSheetFragment.newInstance(shopID, shopName, shopAddress,shopRating, latlng);
+            bottomSheetFragment.setListener(this);
             bottomSheetFragment.show(getChildFragmentManager(),bottomSheetFragment.getTag());
         }
         return true;
@@ -243,4 +260,56 @@ public class MapsFragment extends Fragment {
         return bitmap;
     }
 
+    @Override
+    public void onDirectionsClick() {
+
+        String travelMode= "DRIVE";
+        routesApi.generateRoute(currentPosition,shopID, travelMode, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("Polyline", "Failed to fetch polyline: " +e.getMessage());
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                if(response.isSuccessful()){
+                    String responseBody = response.body().string();
+                    try {
+                        JSONObject jsonObject = new JSONObject(responseBody);
+                        JSONArray routesArray = jsonObject.optJSONArray("routes");
+                        JSONObject routeInfo = routesArray.getJSONObject(0);
+                        String routeDistance = routeInfo.getString("distanceMeters");
+                        String routeDuration = routeInfo.getString("duration");
+                        JSONObject polylineObject = routeInfo.getJSONObject("polyline");
+                        String encodedPolyline = polylineObject.getString("encodedPolyline");
+                        requireActivity().runOnUiThread(()-> drawPolyLine(encodedPolyline));
+                    }catch(Exception e){
+                        Log.e("Polyline", "Failed to fetch route polyline: " + e.getMessage());
+                    }
+                }else{
+                    Log.e("Polyline", "Polyline failed: " + response.message());
+                }
+            }
+        });
+    }
+
+    private List<LatLng> decodePolyline(String encodedPoly){
+        return PolyUtil.decode(encodedPoly);
+    }
+
+    private void drawPolyLine(String encodedPolyLine){
+
+        if(currentPolyline != null){
+            currentPolyline.remove();
+        }
+        List<LatLng>polyLineList = new ArrayList<>();
+        polyLineList = decodePolyline(encodedPolyLine);
+        Log.d("List", "Poly line list " + polyLineList);
+        PolylineOptions polylineOptions = new PolylineOptions();
+        polylineOptions.add(currentPosition);
+        polyLineList.forEach(polylineOptions::add);
+        polylineOptions.color(Color.rgb(162, 99, 52));
+
+        currentPolyline = mMap.addPolyline(polylineOptions);
+    }
 }
