@@ -93,7 +93,7 @@
             android:drawableLeft="@drawable/route_svgrepo_com__1_"
             android:drawableTint="@color/white"
             android:drawablePadding="10dp"
-            android:text="Directions"
+            android:text="@string/BottomsheetDirectionsButton"
             android:textColor="@color/white"
             android:backgroundTint="@color/accentBrown"
             app:useMaterialThemeColors="false"
@@ -107,7 +107,7 @@
             android:drawableLeft="@drawable/share_nodes_svgrepo_com"
             android:drawableTint="@color/white"
             android:drawablePadding="10sp"
-            android:text="Share"
+            android:text="@string/BottomsheetShareButton"
             android:textColor="@color/white"
             android:backgroundTint="@color/accentBrown"
             app:useMaterialThemeColors="false"
@@ -117,6 +117,25 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="30dp"/>
+        android:layout_height="14dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/BottomsheetOperatingHours"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="3dp"/>
+    <TextView
+        android:id="@+id/bottomsheet_operatingHours"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:text="@string/bottomsheetOperatingUnavailable"
+        android:textColor="#8C8B8B"/>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="14dp"/>
 
 </LinearLayout>

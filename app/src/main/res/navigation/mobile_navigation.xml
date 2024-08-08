@@ -15,7 +15,16 @@
         android:id="@+id/navigation_favourites"
         android:name="com.example.beanthere.ui.Favourites.FavouritesFragment"
         android:label="@string/title_favourites"
-        tools:layout="@layout/fragment_favourites" />
+        tools:layout="@layout/fragment_favourites">
+<!--        <action-->
+<!--            android:id="@+id/action_favouritesFragment_to_mapsFragment"-->
+<!--            app:destination="@+id/mapsFragment">-->
+<!--            <argument-->
+<!--                android:name="placeId"-->
+<!--                app:argType="string"-->
+<!--                app:nullable="true"/>-->
+<!--        </action>-->
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"
@@ -31,5 +40,10 @@
         android:id="@+id/mapsFragment"
         android:name="com.example.beanthere.MapsFragment"
         android:label="fragment_maps"
-        tools:layout="@layout/fragment_maps" />
+        tools:layout="@layout/fragment_maps">
+<!--        <argument-->
+<!--            android:name="placeId"-->
+<!--            app:argType="string"-->
+<!--            app:nullable="true"/>-->
+    </fragment>
 </navigation>

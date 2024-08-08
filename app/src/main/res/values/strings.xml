@@ -49,4 +49,10 @@
     <string name="favouritesNavigate">Navigate</string>
     <string name="favouritesAddress">44 Stanley Ave, Milpark, Johannesburg</string>
 
+<!--    Bottomsheet-->
+    <string name="BottomsheetDirectionsButton">Directions</string>
+    <string name="BottomsheetShareButton">Share</string>
+    <string name="BottomsheetOperatingHours">Operating Hours:</string>
+    <string name="bottomsheetOperatingUnavailable">Operating hours are not provided</string>
+
 </resources>

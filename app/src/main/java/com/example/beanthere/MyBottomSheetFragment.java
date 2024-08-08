@@ -20,6 +20,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -31,13 +33,15 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment{
     private static final String ARG_SHOP_ADDRESS = "shop_address";
     private static final String ARG_SHOP_RATING = "shop_rating";
     private static final String ARG_LAT_LNG = "lat_lng";
+    private static final String ARG_OPERATING_HOURS = "operating_hours";
     private static String name;
     private static String address;
     private static String rating;
     private String userId;
     private Bottomsheetlistener bottomsheetlistener;
+    private TextView shopOperatingHours;
 
-    public static MyBottomSheetFragment newInstance (String placeId, String shopName,String shopAddress, String shopRating,String latlng){
+    public static MyBottomSheetFragment newInstance (String placeId, String shopName, String shopAddress, String shopRating, String latlng, ArrayList<String> hours){
         MyBottomSheetFragment fragment = new MyBottomSheetFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PLACE_ID, placeId);
@@ -45,6 +49,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment{
         args.putString(ARG_SHOP_ADDRESS, shopAddress);
         args.putString(ARG_SHOP_RATING, shopRating);
         args.putString(ARG_LAT_LNG, latlng);
+        args.putStringArrayList(ARG_OPERATING_HOURS,hours);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,6 +73,10 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment{
             TextView shopAddressTextView = view.findViewById(R.id.bottomsheet_shopAddress);
             shopAddressTextView.setText(address);
 
+            ArrayList<String> operatingHours = getArguments().getStringArrayList(ARG_OPERATING_HOURS);
+            shopOperatingHours = view.findViewById(R.id.bottomsheet_operatingHours);
+            makeListVerticalText(operatingHours);
+
             if(rating !=null) {
                 shopRatingTextView.setText(rating);
             }else{
@@ -90,6 +99,15 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment{
             }
         });
         return view;
+    }
+
+    private void makeListVerticalText(ArrayList<String> operatingHours){
+        if (operatingHours != null) {
+            String operatingHoursText = String.join("\n", operatingHours); // Join with newlines
+            shopOperatingHours.setText(operatingHoursText);
+        } else {
+            shopOperatingHours.setText("Operating hours are not provided"); // Handle the case where operatingHours is null
+        }
     }
 
     private void addFavourite(){

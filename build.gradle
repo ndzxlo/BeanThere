@@ -1,3 +1,14 @@
+buildscript {
+    repositories {
+        google()
+        // Other repositories...
+    }
+    dependencies {
+        // Other dependencies...
+        def nav_version = "2.5.3" // Use the latest version
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
+    }
+}
 plugins {
     id 'com.android.application' version '8.5.0' apply false
     id 'com.android.library' version '8.5.0' apply false
