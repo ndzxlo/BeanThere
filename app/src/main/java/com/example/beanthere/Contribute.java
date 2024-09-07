@@ -40,6 +40,8 @@ public class Contribute extends Fragment implements UploadedImageAdapter.OnFabCl
     private String discoveredPlaceLatLng;
     private String discoveredPlaceAddress;
     private ImageView uploadedImages;
+    RecyclerView placeImageRecyclerView;
+    RecyclerView menuImageRecyclerView;
     private ActivityResultLauncher<PickVisualMediaRequest> pickPlaceImages;
     private ActivityResultLauncher<PickVisualMediaRequest> pickMenuImages;
     private List<UploadedImageModel> placeImageItems;
@@ -73,8 +75,8 @@ public class Contribute extends Fragment implements UploadedImageAdapter.OnFabCl
 
         autoComplete();
 
-        RecyclerView placeImageRecyclerView = view.findViewById(R.id.placeImageRecyclerview);
-        RecyclerView menuImageRecyclerView = view.findViewById(R.id.menuImageRecyclerview);
+        placeImageRecyclerView = view.findViewById(R.id.placeImageRecyclerview);
+        menuImageRecyclerView = view.findViewById(R.id.menuImageRecyclerview);
 
         placeImageItems = new ArrayList<>();
         menuImageItems = new ArrayList<>();
@@ -86,7 +88,10 @@ public class Contribute extends Fragment implements UploadedImageAdapter.OnFabCl
         menuImageRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 3));
 
         placeImageRecyclerView.setAdapter(placeImageAdapter);
+        isImageEmpty(placeImageItems, placeImageRecyclerView);
+
         menuImageRecyclerView.setAdapter(menuImageAdapter);
+        isImageEmpty(menuImageItems, menuImageRecyclerView);
 
         Button placeUploadButton = view.findViewById(R.id.uploadPlaceButton);
         Button uploadMenuButton = view.findViewById(R.id.uploadMenuButton);
@@ -150,6 +155,7 @@ public class Contribute extends Fragment implements UploadedImageAdapter.OnFabCl
                 int position = placeImageItems.size();
                 placeImageItems.add(new UploadedImageModel(uri.toString()));
                 placeImageAdapter.notifyItemInserted(position);
+                isImageEmpty(placeImageItems, placeImageRecyclerView);
             }
             Log.d("PhotoPicker", "Number of items selected: " + uris.size());
         } else {
@@ -163,6 +169,7 @@ public class Contribute extends Fragment implements UploadedImageAdapter.OnFabCl
                 int position = menuImageItems.size();
                 menuImageItems.add(new UploadedImageModel(uri.toString()));
                 menuImageAdapter.notifyItemInserted(position);
+                isImageEmpty(menuImageItems, menuImageRecyclerView);
             }
             Log.d("PhotoPicker", "Number of items selected: " + uris.size());
         } else {
@@ -175,14 +182,24 @@ public class Contribute extends Fragment implements UploadedImageAdapter.OnFabCl
             if (position >= 0 && position < placeImageItems.size()) {
                 placeImageItems.remove(position);
                 placeImageAdapter.notifyItemRemoved(position);
+                isImageEmpty(placeImageItems, placeImageRecyclerView);
                 Log.d("PhotoPicker", "Image removed at position: " + position);
             }
         }else{
             if (position >= 0 && position < menuImageItems.size()) {
                 menuImageItems.remove(position);
                 menuImageAdapter.notifyItemRemoved(position);
+                isImageEmpty(menuImageItems, menuImageRecyclerView);
                 Log.d("PhotoPicker", "Image removed at position: " + position);
             }
+        }
+    }
+
+    private void isImageEmpty(List<UploadedImageModel> images, RecyclerView recyclerView){
+        if(images.isEmpty()){
+            recyclerView.setVisibility(View.GONE);
+        }else {
+            recyclerView.setVisibility(View.VISIBLE);
         }
     }
 
