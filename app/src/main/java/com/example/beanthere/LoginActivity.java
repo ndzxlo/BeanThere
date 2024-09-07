@@ -96,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }else{
                     runOnUiThread(()->{
+                        toastMaker("Invalid login credentials");
                         showLoading(false);
                         Log.e("LOGIN", "Login failed: " + response.message());
                     });

@@ -34,9 +34,13 @@
     <string name="map_ID">56f210a55ec1171</string>
 
 <!-- Discovered xml strings -->
-    <string name="discovered_shopAddress">Shop Address</string>
-    <string name="discovered_shopName">Shop Name</string>
-    <string name="discovered_rateText">Rate Shop</string>
+    <string name="discovered_shopAddress">Coffee shop address</string>
+    <string name="discovered_shopName">coffee shop name</string>
+    <string name="discovered_shopHours">Operating hours</string>
+    <string name="discovered_addPlaceImages">upload place images</string>
+    <string name="discovered_addMenuImages">upload menu images</string>
+    <string name="discovered_rateText">Rate coffee shop</string>
+    <string name="discovered_buttonSubmit">Submit</string>
 
 <!-- Favourites page   -->
     <string name="favourites_defaultText">No favourites</string>
