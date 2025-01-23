@@ -1,16 +1,162 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".discovered"
-    android:background="#f8f8f8">
+    android:orientation="vertical"
+    tools:context=".Contribute"
+    android:background="#f8f8f8"
+    android:paddingHorizontal="25dp">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment"
-        android:textColor="@color/black"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/discovered_shopAddress"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"/>
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_border"
+        android:layout_marginBottom="15dp">
+
+        <fragment
+            android:id="@+id/autocompleteFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/discovered_shopName"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:layout_marginBottom="5dp"/>
+
+    <EditText
+        android:id="@+id/shopNameInput"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:inputType="text"
+        android:hint="@string/discovered_shopName"
+        android:textColorHint="@color/quantum_grey"
+        android:autofillHints="name"
+        android:textColor="@color/black"
+        android:layout_marginBottom="20dp"
+        android:padding="5dp"
+        android:background="@drawable/edit_text_border"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/discovered_shopHours"
+        android:textColor="@color/black"
+        android:layout_marginBottom="5dp"/>
+
+    <Button
+        android:id="@+id/uploadPlaceButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/images_regular"
+        android:drawableTint="@color/white"
+        android:text="@string/discovered_addPlaceImages"
+        android:textAllCaps="false"
+        app:useMaterialThemeColors="false"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/accentBrown"
+        android:layout_marginBottom="5dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="3dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/placeImageRecyclerview"
+            android:layout_width="0dp"
+            android:layout_height="95dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/uploadMenuButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/images_regular"
+        android:drawableTint="@color/white"
+        android:text="@string/discovered_addMenuImages"
+        android:textAllCaps="false"
+        app:useMaterialThemeColors="false"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/accentBrown"
+        android:layout_marginBottom="5dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="3dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/menuImageRecyclerview"
+            android:layout_width="0dp"
+            android:layout_height="95dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="5dp"/>
+
+    <LinearLayout
+        android:id="@+id/ratingContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:layout_marginBottom="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/discovered_rateText"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="10dp"/>
+
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/rateSlider"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.App.Slider"
+            android:contentDescription="slider"
+            android:valueFrom="0.0"
+            android:valueTo="5.0"
+            android:stepSize="1.0"
+            app:trackColorActive="#A26334"
+            app:trackColorInactive="#B19F91"
+            app:thumbColor="@color/accentBrown"
+            app:tickColor="@color/white" />
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/discovered_buttonSubmit"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/accentBrown"
+        app:useMaterialThemeColors="false"/>
+
+</LinearLayout>

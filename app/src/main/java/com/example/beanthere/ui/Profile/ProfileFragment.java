@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.util.*;
 import android.widget.*;
 import android.content.Intent;
@@ -16,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.beanthere.LoginActivity;
 import com.example.beanthere.databinding.FragmentProfileBinding;
 import com.example.beanthere.network.supaBaseClient;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +40,11 @@ public class ProfileFragment extends Fragment {
 
         getUserData();
 
+        SwitchMaterial mySwitch = binding.darkModeSwitch;
+
         binding.logOutButton.setOnClickListener(v -> logoutUser());
+        binding.darkModeSwitchButton.setOnClickListener(view ->
+                mySwitch.setChecked(mySwitch.isChecked()));
 
         return root;
     }
@@ -71,9 +75,11 @@ public class ProfileFragment extends Fragment {
                         JSONObject jsonObject = new JSONObject(responseBody);
                         JSONObject metaData = jsonObject.getJSONObject("user_metadata");
                         String fullName = metaData.getString("full_name");
+                        String email = jsonObject.getString("email");
                         requireActivity().runOnUiThread(() -> {
                             Log.i("UserData", "Get user data successful");
                             binding.UserName.setText(fullName);
+                            binding.UserEmail.setText(email);
                         });
                     } catch (JSONException e) {
                         requireActivity().runOnUiThread(() -> {
@@ -88,6 +94,7 @@ public class ProfileFragment extends Fragment {
             }
         });
     }
+
 
     private void logoutUser() {
         supaBaseClient.logoutUser(requireContext(), new Callback() {

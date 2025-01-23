@@ -5,13 +5,18 @@ import static android.provider.Settings.System.getString;
 import okhttp3.*;
 
 import com.example.beanthere.R;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.security.crypto.EncryptedSharedPreferences;
 import androidx.security.crypto.MasterKey;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -68,6 +73,65 @@ public class supaBaseClient{
         client.newCall(request).enqueue(callback);
     }
 
+    public static void addToFavourites(String userId, String placeID, String name, String address, String rating, String coordinates, Callback callback){
+        String url = SUPABASE_URL + "/rest/v1/favourites";
+
+        // JSON data to fill favourites table
+        JsonObject json = new JsonObject();
+        json.addProperty("user_id", userId);
+        json.addProperty("place_id", placeID);
+        json.addProperty("name", name);
+        json.addProperty("address", address);
+        json.addProperty("rating", rating);
+        json.addProperty("latlng", coordinates);
+
+        RequestBody body = RequestBody.create(new Gson().toJson(json),
+                MediaType.parse("application/json"));
+
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .addHeader("apikey", SUPABASE_KEY)
+                .addHeader("Authorization","Bearer " + SUPABASE_KEY)
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+    public static void getFavourites(String userId, Callback callback){
+
+        String url = SUPABASE_URL + "/rest/v1/favourites?select=*&user_id=eq." + userId;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("apikey", SUPABASE_KEY)
+                .addHeader("Authorization", "Bearer " + SUPABASE_KEY)
+                .addHeader("Content-Type", "application/json")
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
+    public static void deleteFavourite(String userId, String placeId, Callback callback){
+
+        String url = SUPABASE_URL + "/rest/v1/favourites";
+
+        // Build the query parameters
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(url).newBuilder();
+        urlBuilder.addQueryParameter("user_id", "eq." + userId);
+        urlBuilder.addQueryParameter("place_id", "eq." + placeId);
+
+        Request request = new Request.Builder()
+                .url(urlBuilder.build())
+                .addHeader("apikey", SUPABASE_KEY)
+                .addHeader("Authorization", "Bearer " + SUPABASE_KEY)
+                .addHeader("Content-Type", "application/json")
+                .delete()
+                .build();
+
+        client.newCall(request).enqueue(callback);
+    }
+
     public static void logoutUser(Context context, Callback callback) {
         String authToken = getAuthToken(context);
         if (authToken == null) {
@@ -97,7 +161,6 @@ public class supaBaseClient{
 
         Request request = new Request.Builder()
                 .url(url)
-                .get()
                 .addHeader("apikey", SUPABASE_KEY)
                 .addHeader("Authorization", "Bearer " + authToken)
                 .build();

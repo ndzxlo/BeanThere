@@ -61,7 +61,6 @@ public class SignUpActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String responseBody = response.body().string();
-                    Log.d("REGISTER", "Response body: " + responseBody);
                     try {
                         JSONObject jsonObject = new JSONObject(responseBody);
                         String authToken = jsonObject.getString("access_token");

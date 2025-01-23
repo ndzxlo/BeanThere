@@ -1,8 +1,13 @@
 package com.example.beanthere;
 
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.Manifest;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.DrawableContainer;
+import android.view.MenuItem;
 import android.widget.Toast;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -11,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -31,11 +37,12 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_community, R.id.navigation_favourites, R.id.navigation_profile)
+                R.id.navigation_community, R.id.navigation_favourites, R.id.navigation_profile,
+                R.id.mapsFragment, R.id.navigation_beanthere)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
@@ -58,10 +65,6 @@ public class MainActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                         LOCATION_PERMISSION_REQUEST_CODE);
             }
-        } else {
-            // Permissions are already granted, you can proceed with your location-related tasks
-            Toast.makeText(this, "Location permissions already granted", Toast.LENGTH_SHORT).show();
-            // Proceed with accessing location
         }
     }
 
